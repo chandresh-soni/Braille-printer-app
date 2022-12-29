@@ -512,7 +512,7 @@ typedef struct brf_cups_device_data_s
 
   cf_filter_filter_in_chain_t *chain_filter; // Filter from PPD file
   cf_filter_data_t *filter_data;             // Common data for filter functions
-  ppd_filter_external_cups_t backend_params; // Parameters for launching
+  cf_filter_external_t backend_params; // Parameters for launching
                                              // backend via ppdFilterExternalCUPS()
   bool internal_filter_data;                 // Is filter_data
                                              // internal?
@@ -534,7 +534,7 @@ static brf_spooling_conversion_t brf_convert_pdf_to_brf =
         1,
         {
           {
-          ppdFilterExternalCUPS,
+          cfFilterExternal,
           NULL,
           "txttobrf"
           }
@@ -554,7 +554,7 @@ BRFTestFilterCB(
   cf_filter_filter_in_chain_t *chain_filter, // Filter from PPD file
       *print;
   brf_cups_device_data_t *device_data = NULL;
-  ppd_filter_external_cups_t *filter_data_ext;
+  cf_filter_external_t *filter_data_ext;
   brf_print_filter_function_data_t *print_params;
   brf_printer_app_global_data_t *global_data;
   cf_filter_data_t *filter_data;
@@ -569,7 +569,7 @@ BRFTestFilterCB(
   bool ret = false;    // Return value
   int num_options = 0; // Number of PPD print options
   cups_option_t *options = NULL;
-  ppd_filter_external_cups_t *ext_filter_params;
+  cf_filter_external_t *ext_filter_params;
 
   pappl_pr_driver_data_t driver_data;
   pappl_printer_t *printer = papplJobGetPrinter(job);
@@ -608,7 +608,7 @@ BRFTestFilterCB(
   //             "Printing job in spooling mode");
 
   // filter_data_ext =
-  //     (ppd_filter_data_ext_t *)cfFilterDataGetExt(filter_data,
+  //     (ppd_filter_data_ext_t *)cf_filter_external_tilterDataGetExt(filter_data,
   //                                                 PPD_FILTER_DATA_EXT);
 
   //
@@ -633,11 +633,9 @@ BRFTestFilterCB(
   //
   // Passing values to ppdFilterExternalCUPS()
   //
-  filter_data_ext = (ppd_filter_external_cups_t *)calloc(1, sizeof(ppd_filter_external_cups_t));
+  filter_data_ext = (cf_filter_external_t *)calloc(1, sizeof(cf_filter_external_t));
   
   filter_data_ext->filter = "usr/lib/cups/filter/txttobrf"; 
-  filter_data_ext->is_backend= 0;
-  filter_data_ext->device_uri = 0;
   filter_data_ext->num_options =0;
   filter_data_ext->options = NULL;
   filter_data_ext->envp= NULL;
